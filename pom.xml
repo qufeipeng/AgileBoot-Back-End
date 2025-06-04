@@ -351,6 +351,13 @@
             </plugin>
         </plugins>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/BruceBlink/AgileBoot-Back-End</url>
+        </repository>
+    </distributionManagement>
+
 
 <!--    <repositories>-->
 <!--        <repository>-->
