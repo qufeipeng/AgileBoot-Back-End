@@ -88,13 +88,14 @@ jobs:
           
       # 上传构建产物
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: agileboot-artifacts-java-${{ matrix.java-version }}
           path: |
             **/target/*.jar
             !**/target/original-*.jar
           retention-days: 5
+          if-no-files-found: error
           
       # 只在 Java 17 版本上更新依赖图
       - name: Update dependency graph
