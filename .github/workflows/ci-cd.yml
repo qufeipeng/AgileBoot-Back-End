@@ -1,0 +1,113 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+        - 'README.md'
+        - 'LICENSE'
+        - '.gitignore'
+        - '.gitattributes'
+        - 'picture'
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:  # 允许手动触发工作流
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # 设置构建超时时间
+    strategy:
+      matrix:
+        java-version: ['17', '21']  # 保留主流 LTS 版本
+      fail-fast: false  # 某个版本失败不影响其他版本继续构建
+    
+    name: Build with Java ${{ matrix.java-version }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整的Git历史用于版本计算
+      
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      # 缓存 Maven 本地仓库
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      
+      # 运行测试和构建
+      - name: Build and Test with Maven
+        run: |
+          mvn -B verify --file pom.xml -Dmaven.test.failure.ignore=false -Dmaven.compiler.failOnWarning=true -Dgpg.skip -Dmaven.javadoc.skip=false
+        env:
+          MAVEN_OPTS: -Xmx4g -XX:MaxMetaspaceSize=1g
+          MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+
+      # 收集测试报告
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure()  # 无论测试成功还是失败都运行
+        with:
+          report_paths: '**/target/surefire-reports/TEST-*.xml'
+          detailed_summary: true
+          include_passed: true
+          fail_on_failure: true
+          
+      # 添加代码质量检查（可选）
+      - name: Run SonarQube Analysis
+        if: matrix.java-version == '17' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        run: |
+          if [[ ! -z "${{ secrets.SONAR_TOKEN }}" ]]; then
+            mvn sonar:sonar \
+              -Dsonar.projectKey=agileboot \
+              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION || 'default' }} \
+              -Dsonar.host.url=${{ secrets.SONAR_HOST_URL || 'https://sonarcloud.io' }} \
+              -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+              -Dsonar.java.source=${{ matrix.java-version }}
+          else
+            echo "Skipping SonarQube analysis - SONAR_TOKEN not configured"
+          fi
+          
+      # 上传构建产物
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: agileboot-artifacts-java-${{ matrix.java-version }}
+          path: |
+            **/target/*.jar
+            !**/target/original-*.jar
+          retention-days: 5
+          
+      # 只在 Java 17 版本上更新依赖图
+      - name: Update dependency graph
+        uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+        if: matrix.java-version == '17'
+        
+      # 发送构建状态通知
+      - name: Notify Build Status
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK || '' }}
+          SLACK_CHANNEL: build-notifications
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: Build Status for Java ${{ matrix.java-version }}
+          SLACK_MESSAGE: 'Build ${{ job.status }} on Java ${{ matrix.java-version }}'
