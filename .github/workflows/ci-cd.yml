@@ -28,7 +28,7 @@ jobs:
     timeout-minutes: 30  # 设置构建超时时间
     strategy:
       matrix:
-        java-version: ['17', '21']  # 保留主流 LTS 版本
+        java-version: ['8', '17', '21']  # 保留主流 LTS 版本
       fail-fast: false  # 某个版本失败不影响其他版本继续构建
     
     name: Build with Java ${{ matrix.java-version }}
