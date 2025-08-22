@@ -33,7 +33,7 @@ public class SearchUserQuery<T> extends AbstractPageQuery<T> {
                 o.eq("u.dept_id", deptId)
                     .or()
                     .apply("u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(" + deptId
-                        + ", ancestors))"));
+                        + ", ancestors) > 0)"));
 
         // 设置排序字段
         this.timeRangeColumn = "u.create_time";

@@ -2,7 +2,8 @@
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
-        driverClassName: com.mysql.cj.jdbc.Driver
+        #driverClassName: com.mysql.cj.jdbc.Driver
+        driverClassName: com.yashandb.jdbc.Driver
         druid:
             webStatFilter:
                 enabled: true
@@ -50,9 +51,10 @@ spring:
             datasource:
                 # 主库数据源
                 master:
-                    url: jdbc:mysql://localhost:33067/agileboot-pure?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                    username: root
-                    password: 12345
+                    #url: jdbc:mysql://localhost:3306/agileboot?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                    url: jdbc:yasdb://localhost:1706/agileboot
+                    username: agileboot
+                    password: yasdb_123
                 # 从库数据源
 #                slave:
 #                    url: jdbc:mysql://localhost:33067/agileboot2?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
@@ -103,3 +105,11 @@ agileboot:
     # 前端url请求转发前缀
     api-prefix: /dev-api
     demo-enabled: false
+
+mybatis-plus:
+    global-config:
+        db-config:
+            db-type: oracle
+
+pagehelper:
+    helperDialect: oracle

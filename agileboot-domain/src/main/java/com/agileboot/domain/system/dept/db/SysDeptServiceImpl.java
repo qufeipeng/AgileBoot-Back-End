@@ -38,7 +38,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
         QueryWrapper<SysDeptEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(enabled != null, "status", 1)
             .and(o -> o.eq("parent_id", deptId).or()
-                .apply("FIND_IN_SET (" + deptId + " , ancestors)")
+                .apply("FIND_IN_SET (" + deptId + " , ancestors) > 0")
             );
         return this.baseMapper.exists(queryWrapper);
     }
@@ -47,7 +47,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
     @Override
     public boolean isChildOfTheDept(Long parentId, Long childId) {
         QueryWrapper<SysDeptEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.apply("dept_id = '" + childId + "' and FIND_IN_SET ( " + parentId + " , ancestors)");
+        queryWrapper.apply("dept_id = '" + childId + "' and FIND_IN_SET ( " + parentId + " , ancestors) > 0");
         return this.baseMapper.exists(queryWrapper);
     }
 

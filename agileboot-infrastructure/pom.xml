@@ -80,6 +80,12 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <!-- yashandb驱动包 -->
+        <dependency>
+            <groupId>com.yashandb</groupId>
+            <artifactId>yashandb-jdbc</artifactId>
+        </dependency>
+
         <!-- springboot测试模块-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
