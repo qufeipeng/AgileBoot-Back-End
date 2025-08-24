@@ -43,9 +43,9 @@ public class PocController extends BaseController {
      * 获取用户列表
      */
     @Operation(summary = "POC列表")
-    @PreAuthorize("@permission.has('poc:list') AND @dataScope.checkDeptId(#query.deptId)")
+    @PreAuthorize("@permission.has('poc:list')")
     @GetMapping
-    public ResponseDTO<PageDTO<PocDTO>> userList(PocQuery<SearchPocDO> query) {
+    public ResponseDTO<PageDTO<PocDTO>> pocList(PocQuery<SearchPocDO> query) {
         PageDTO<PocDTO> page = pocApplicationService.getPocList(query);
         return ResponseDTO.ok(page);
     }
@@ -87,7 +87,7 @@ public class PocController extends BaseController {
     @Operation(summary = "POC详情")
     @PreAuthorize("@permission.has('poc:query')")
     @GetMapping("/{pocId}")
-    public ResponseDTO<PocDTO> getUserDetailInfo(@PathVariable(value = "pocId", required = false) Long pocId) {
+    public ResponseDTO<PocDTO> getPocInfo(@PathVariable(value = "pocId", required = false) Long pocId) {
         PocDTO pocInfo = pocApplicationService.getPocInfo(pocId);
         return ResponseDTO.ok(pocInfo);
     }

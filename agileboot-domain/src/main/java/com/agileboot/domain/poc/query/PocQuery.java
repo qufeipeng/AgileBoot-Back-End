@@ -2,8 +2,6 @@ package com.agileboot.domain.poc.query;
 
 import cn.hutool.core.util.StrUtil;
 import com.agileboot.common.core.page.AbstractPageQuery;
-import com.agileboot.domain.poc.db.PocEntity;
-import com.agileboot.domain.poc.db.SearchPocDO;
 import com.agileboot.infrastructure.user.AuthenticationUtils;
 import com.agileboot.infrastructure.user.web.SystemLoginUser;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

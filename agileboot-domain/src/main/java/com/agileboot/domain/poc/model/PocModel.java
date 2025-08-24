@@ -8,14 +8,10 @@ import com.agileboot.domain.poc.command.UpdatePocCommand;
 import com.agileboot.domain.poc.db.PocEntity;
 import com.agileboot.domain.poc.db.PocService;
 import com.agileboot.domain.system.dept.model.DeptModelFactory;
-import com.agileboot.domain.system.post.command.AddPostCommand;
-import com.agileboot.domain.system.post.command.UpdatePostCommand;
-import com.agileboot.domain.system.post.db.SysPostEntity;
-import com.agileboot.domain.system.post.db.SysPostService;
 import lombok.NoArgsConstructor;
 
 /**
- * @author valarchie
+ * @author fisher
  */
 @NoArgsConstructor
 public class PocModel extends PocEntity {
