@@ -44,7 +44,7 @@ public class PocController extends BaseController {
      */
     @Operation(summary = "POC列表")
     @PreAuthorize("@permission.has('poc:list')")
-    @GetMapping
+    @GetMapping("/list")
     public ResponseDTO<PageDTO<PocDTO>> pocList(PocQuery<SearchPocDO> query) {
         PageDTO<PocDTO> page = pocApplicationService.getPocList(query);
         return ResponseDTO.ok(page);
