@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 public class SearchPocDO extends PocEntity {
 
     private String deptName;
-    private String createUsername;
-    private String updateUsername;
+    private String creatorName;
+    private String updaterName;
 
 }

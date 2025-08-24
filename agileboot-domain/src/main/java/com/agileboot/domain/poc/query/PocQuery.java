@@ -3,6 +3,9 @@ package com.agileboot.domain.poc.query;
 import cn.hutool.core.util.StrUtil;
 import com.agileboot.common.core.page.AbstractPageQuery;
 import com.agileboot.domain.poc.db.PocEntity;
+import com.agileboot.domain.poc.db.SearchPocDO;
+import com.agileboot.infrastructure.user.AuthenticationUtils;
+import com.agileboot.infrastructure.user.web.SystemLoginUser;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,23 +15,31 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PocQuery extends AbstractPageQuery<PocEntity> {
+public class PocQuery<T> extends AbstractPageQuery<T> {
 
     private String customer;
     private String project;
-    private Integer status;
+    private String status;
+    private String owner;
+    private String risk;
 
     @Override
-    public QueryWrapper<PocEntity> addQueryCondition() {
-        QueryWrapper<PocEntity> queryWrapper = new QueryWrapper<PocEntity>()
-            .eq(status != null, "status", status)
-            .like(StrUtil.isNotEmpty(customer), "customer", customer)
-            .like(StrUtil.isNotEmpty(project), "project", project);
-        // 当前端没有选择排序字段时，则使用poc_id字段升序排序（在父类AbstractQuery中默认为升序）
-        if (StrUtil.isEmpty(this.getOrderColumn())) {
-            this.setOrderColumn("poc_id");
+    public QueryWrapper<T> addQueryCondition() {
+        QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(StrUtil.isNotEmpty(customer), "u.customer", customer)
+                .like(StrUtil.isNotEmpty(project), "u.project", project)
+                .like(StrUtil.isNotEmpty(owner), "u.owner", owner)
+                .eq(StrUtil.isNotEmpty(status), "u.status", status)
+                .eq(StrUtil.isNotEmpty(risk), "u.risk", risk)
+                .eq("u.deleted", 0);
+
+        SystemLoginUser loginUser = AuthenticationUtils.getSystemLoginUser();
+        if (!loginUser.isAdmin()) {
+            queryWrapper.eq("u.dep_id", loginUser.getDeptId());
         }
-        this.setTimeRangeColumn("create_time");
+
+        // 设置排序字段
+        this.timeRangeColumn = "u.create_time";
 
         return queryWrapper;
     }

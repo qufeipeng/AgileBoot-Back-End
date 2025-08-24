@@ -15,7 +15,7 @@ import java.util.Date;
 
 /**
  * <p>
- * Poc项目汇总表
+ * POC项目汇总表
  * </p>
  *
  * @author fisher
@@ -24,7 +24,7 @@ import java.util.Date;
 @Getter
 @Setter
 @TableName("t_poc")
-@ApiModel(value = "Poc对象", description = "Poc项目汇总表")
+@ApiModel(value = "POC对象", description = "POC项目汇总表")
 public class PocEntity extends BaseEntity<PocEntity> {
 
     private static final long serialVersionUID = 1L;
@@ -139,7 +139,7 @@ public class PocEntity extends BaseEntity<PocEntity> {
 
     @ApiModelProperty("部门ID")
     @TableField("dept_id")
-    private long deptId;
+    private Long deptId;
 
     @Override
     public Serializable pkVal() {

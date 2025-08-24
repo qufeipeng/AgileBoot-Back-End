@@ -204,6 +204,10 @@ public enum ErrorCode implements ErrorCodeInterface {
 
         USER_ADMIN_CAN_NOT_BE_MODIFY(10515, "管理员不允许做任何修改", "Business.USER_ADMIN_CAN_NOT_BE_MODIFY"),
 
+        // ------------------------------- POC --------------------------------------------
+
+        PROJECT_IS_NOT_UNIQUE(20001, "项目名称:{}, 已存在", "Business.PROJECT_IS_NOT_UNIQUE"),
+
         ;
 
 

@@ -1,6 +1,10 @@
 package com.agileboot.domain.poc.db;
 
+import com.agileboot.domain.system.user.db.SearchUserDO;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -17,19 +21,9 @@ import java.util.List;
 public interface PocMapper extends BaseMapper<PocEntity> {
 
     /**
-     * 查询POC列表
-     * @return POC集合信息
-     */
-    @Select("SELECT u.*, d.dept_name, e.username as create_username, f.username as update_username "
-            + "FROM t_poc u "
-            + " LEFT JOIN sys_dept d ON u.dept_id = d.dept_id "
-            + " LEFT JOIN sys_user e ON u.creator_id = e.user_id "
-            + " LEFT JOIN sys_user f ON u.updater_id = f.user_id ")
-    List<SearchPocDO> selectPocList();
-
-    /**
-     * 查询POC列表
-     * @param deptId 部门ID
+     * 根据条件分页查询POC列表
+     * @param page 页码对象
+     * @param queryWrapper 查询对象
      * @return POC集合信息
      */
     @Select("SELECT u.*, d.dept_name, e.username as create_username, f.username as update_username "
@@ -37,7 +31,8 @@ public interface PocMapper extends BaseMapper<PocEntity> {
             + " LEFT JOIN sys_dept d ON u.dept_id = d.dept_id "
             + " LEFT JOIN sys_user e ON u.creator_id = e.user_id "
             + " LEFT JOIN sys_user f ON u.updater_id = f.user_id "
-            + " WHERE u.dept_id = #{deptId} ")
-    List<SearchPocDO> selectPocListByDeptId(@Param("deptId") Long deptId);
+            + " ${ew.customSqlSegment}")
+    Page<SearchPocDO> getPocList(Page<SearchPocDO> page,
+                                   @Param(Constants.WRAPPER) Wrapper<SearchPocDO> queryWrapper);
 
 }
