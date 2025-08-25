@@ -80,16 +80,16 @@ public class PocDTO {
     @ExcelColumn(name = "重点项目")
     private String kv;
 
-    @ExcelColumn(name = "开始时间")
+    @ExcelColumn(name = "开始日期")
     private Date pocStartDt;
 
-    @ExcelColumn(name = "POC完成时间")
+    @ExcelColumn(name = "POC完成日期")
     private Date pocEndDt;
 
-    @ExcelColumn(name = "上线时间")
+    @ExcelColumn(name = "上线日期")
     private Date onlineDt;
 
-    @ExcelColumn(name = "最后更新时间")
+    @ExcelColumn(name = "最后更新日期")
     private Date lastUpdDt;
 
     @ExcelColumn(name = "省份")
@@ -98,7 +98,7 @@ public class PocDTO {
     @ExcelColumn(name = "行业")
     private String industry;
 
-    @ExcelColumn(name = "isv")
+    @ExcelColumn(name = "ISV")
     private String isv;
 
     @ExcelColumn(name = "运维厂商")
