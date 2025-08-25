@@ -36,8 +36,11 @@ public class PocQuery<T> extends AbstractPageQuery<T> {
             queryWrapper.eq("u.dep_id", loginUser.getDeptId());
         }
 
-        // 设置排序字段
-        this.timeRangeColumn = "u.create_time";
+        // 当前端没有选择排序字段时，则使用create_time字段升序排序（在父类AbstractQuery中默认为升序）
+        if (StrUtil.isEmpty(this.getOrderColumn())) {
+            this.setOrderColumn("u.create_time");
+        }
+        this.setTimeRangeColumn("u.create_time");
 
         return queryWrapper;
     }
